@@ -16,6 +16,15 @@ namespace ConsoleDBTableListener
         private Task _timer;
         public delegate void RecordsFound();
         public event RecordsFound OnRecordsFound;
+        /// <summary>
+        /// Трекер количества строк в таблице
+        /// </summary>
+        /// <param name="connectionString">
+        /// Строка подключения
+        /// </param>
+        /// <param name="tableName">
+        /// Имя таблицы для трекинга
+        /// </param>
         public TableTracker(string connectionString, string tableName)
         {
             _connectionString = connectionString;
@@ -68,7 +77,7 @@ namespace ConsoleDBTableListener
                         {
                             command.CommandText = "SELECT SUM(row_count) " +
                                                     "FROM sys.dm_db_partition_stats " +
-                                                    "WHERE object_id = OBJECT_ID('Tickets')";
+                                                    $"WHERE object_id = OBJECT_ID('{_tableName}')";
                             var reader = command.ExecuteScalar();
                             return (long)reader;
                         }
